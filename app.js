@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
+// Get routes
 app.get("/", (req, res, next) => {
   res.render("index");
 });
@@ -55,6 +55,23 @@ app.get("/sign-up", (req, res, next) => {
 app.get("/log-in", (req, res, next) => {
   res.render("log-in");
 });
+
+// Post routes
+app.post("/sign-up", async (req, res, next) => {
+  const { email, password } = req.body;
+  await pool.query("INSERT INTO users (email, password) VALUES ($1, $2)", [
+    email,
+    password,
+  ]);
+  res.redirect("/");
+});
+app.post(
+  "/log-in",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/log-in",
+  })
+);
 
 // App server
 app.listen(PORT, () => {
