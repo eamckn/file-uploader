@@ -3,8 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const path = require("node:path");
-const pgSession = require("connect-pg-simple")(session);
-const pool = require("./pool");
 const passport = require("passport");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
