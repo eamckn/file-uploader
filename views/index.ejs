@@ -12,6 +12,11 @@
     <% if (locals.currentUser) { %>
     <p>Hello <%- locals.currentUser.email %></p>
     <p>Click <a href="/log-out">here</a> to log out.</p>
+    <p>Upload a file below:</p>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="file" />
+      <button type="submit">Upload</button>
+    </form>
     <% } %>
   </body>
 </html>

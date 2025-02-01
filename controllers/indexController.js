@@ -1,7 +1,20 @@
 const { PrismaClient } = require("@prisma/client");
+const multer = require("multer");
 
 // Prisma client instantialization
 const prisma = new PrismaClient();
+
+// Multer storage config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 module.exports.getHome = (req, res, next) => {
   res.render("index");
@@ -35,3 +48,11 @@ module.exports.createUser = async (req, res, next) => {
   });
   res.redirect("/");
 };
+
+module.exports.uploadFile = [
+  upload.single("file"),
+  async (req, res, next) => {
+    console.log(req.file);
+    res.redirect("/");
+  },
+];

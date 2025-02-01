@@ -17,5 +17,6 @@ router.post(
     failureRedirect: "/log-in",
   })
 );
+router.post("/upload", indexController.uploadFile);
 
 module.exports = router;
