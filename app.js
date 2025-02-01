@@ -13,9 +13,12 @@ require("./config/passport");
 // App constants
 const PORT = process.env.PORT || 8080;
 const assetsPath = path.join(__dirname, "public");
-const sessionStore = new pgSession({
-  pool: pool,
+const sessionStore = new PrismaSessionStore(new PrismaClient(), {
+  checkPeriod: 2 * 60 * 1000, //ms
+  dbRecordIdIsSessionId: true,
+  dbRecordIdFunction: undefined,
 });
+const prisma = new PrismaClient();
 
 // App initializations
 const app = express();
@@ -40,6 +43,13 @@ app.use(
 );
 app.use(passport.session());
 app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  if (res.locals.currentUser) {
+    console.log(res.locals.currentUser);
+  }
+  next();
+});
+app.use((req, res, next) => {
   console.log(req.session);
   console.log(req.user);
   next();
@@ -55,14 +65,25 @@ app.get("/sign-up", (req, res, next) => {
 app.get("/log-in", (req, res, next) => {
   res.render("log-in");
 });
+app.get("/log-out", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    } else {
+      res.redirect("/");
+    }
+  });
+});
 
 // Post routes
 app.post("/sign-up", async (req, res, next) => {
   const { email, password } = req.body;
-  await pool.query("INSERT INTO users (email, password) VALUES ($1, $2)", [
-    email,
-    password,
-  ]);
+  await prisma.user.create({
+    data: {
+      email: email,
+      password: password,
+    },
+  });
   res.redirect("/");
 });
 app.post(

@@ -9,5 +9,9 @@
     <h1>Home</h1>
     <p>Click <a href="/sign-up">here</a> to sign up.</p>
     <p>Click <a href="/log-in">here</a> to log in.</p>
+    <% if (locals.currentUser) { %>
+    <p>Hello <%- locals.currentUser.email %></p>
+    <p>Click <a href="/log-out">here</a> to log out.</p>
+    <% } %>
   </body>
 </html>
