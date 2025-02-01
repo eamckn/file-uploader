@@ -7,6 +7,7 @@ const passport = require("passport");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 require("./config/passport");
+const router = require("./routes/indexRouter");
 
 // App constants
 const PORT = process.env.PORT || 8080;
@@ -16,7 +17,6 @@ const sessionStore = new PrismaSessionStore(new PrismaClient(), {
   dbRecordIdIsSessionId: true,
   dbRecordIdFunction: undefined,
 });
-const prisma = new PrismaClient();
 
 // App initializations
 const app = express();
@@ -40,6 +40,8 @@ app.use(
   })
 );
 app.use(passport.session());
+
+// Debugging middlewares
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   if (res.locals.currentUser) {
@@ -53,44 +55,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Get routes
-app.get("/", (req, res, next) => {
-  res.render("index");
-});
-app.get("/sign-up", (req, res, next) => {
-  res.render("sign-up");
-});
-app.get("/log-in", (req, res, next) => {
-  res.render("log-in");
-});
-app.get("/log-out", (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    } else {
-      res.redirect("/");
-    }
-  });
-});
-
-// Post routes
-app.post("/sign-up", async (req, res, next) => {
-  const { email, password } = req.body;
-  await prisma.user.create({
-    data: {
-      email: email,
-      password: password,
-    },
-  });
-  res.redirect("/");
-});
-app.post(
-  "/log-in",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/log-in",
-  })
-);
+app.use("/", router);
 
 // App server
 app.listen(PORT, () => {
