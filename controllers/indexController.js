@@ -16,6 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// GET middlewares
 module.exports.getHome = (req, res, next) => {
   res.render("index");
 };
@@ -28,6 +29,21 @@ module.exports.getLogIn = (req, res, next) => {
   res.render("log-in");
 };
 
+module.exports.getNewFolder = (req, res, next) => {
+  res.render("newFolder");
+};
+
+module.exports.getAllFolders = async (req, res, next) => {
+  const { id } = req.user;
+  const folders = await prisma.folder.findMany({
+    where: {
+      userId: id,
+    },
+  });
+  console.log(folders);
+  res.render("folders", { folders });
+};
+
 module.exports.logOut = (req, res, next) => {
   req.logout((err) => {
     if (err) {
@@ -38,12 +54,25 @@ module.exports.logOut = (req, res, next) => {
   });
 };
 
+// POST middlewares
 module.exports.createUser = async (req, res, next) => {
   const { email, password } = req.body;
   await prisma.user.create({
     data: {
       email: email,
       password: password,
+    },
+  });
+  res.redirect("/");
+};
+
+module.exports.createFolder = async (req, res, next) => {
+  const { id } = req.user;
+  const { folderName } = req.body;
+  await prisma.folder.create({
+    data: {
+      name: folderName,
+      userId: id,
     },
   });
   res.redirect("/");

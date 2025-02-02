@@ -7,6 +7,8 @@ router.get("/", indexController.getHome);
 router.get("/sign-up", indexController.getSignUp);
 router.get("/log-in", indexController.getLogIn);
 router.get("/log-out", indexController.logOut);
+router.get("/new-folder", indexController.getNewFolder);
+router.get("/folders", indexController.getAllFolders);
 
 // POST routes
 router.post("/sign-up", indexController.createUser);
@@ -18,5 +20,6 @@ router.post(
   })
 );
 router.post("/upload", indexController.uploadFile);
+router.post("/new-folder", indexController.createFolder);
 
 module.exports = router;
