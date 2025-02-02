@@ -33,6 +33,16 @@ module.exports.getNewFolder = (req, res, next) => {
   res.render("newFolder");
 };
 
+module.exports.getUpdateFolder = async (req, res, next) => {
+  const { id } = req.params;
+  const folder = await prisma.folder.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  res.render("updateFolder", { folder: folder });
+};
+
 module.exports.getAllFolders = async (req, res, next) => {
   const { id } = req.user;
   const folders = await prisma.folder.findMany({
@@ -40,7 +50,7 @@ module.exports.getAllFolders = async (req, res, next) => {
       userId: id,
     },
   });
-  console.log(folders);
+  //console.log(folders);
   res.render("folders", { folders });
 };
 
@@ -73,6 +83,20 @@ module.exports.createFolder = async (req, res, next) => {
     data: {
       name: folderName,
       userId: id,
+    },
+  });
+  res.redirect("/");
+};
+
+module.exports.updateFolder = async (req, res, next) => {
+  const { id } = req.params;
+  const { folderName } = req.body;
+  await prisma.folder.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      name: folderName,
     },
   });
   res.redirect("/");

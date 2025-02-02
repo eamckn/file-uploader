@@ -9,6 +9,7 @@ router.get("/log-in", indexController.getLogIn);
 router.get("/log-out", indexController.logOut);
 router.get("/new-folder", indexController.getNewFolder);
 router.get("/folders", indexController.getAllFolders);
+router.get("/folders/update/:id", indexController.getUpdateFolder);
 
 // POST routes
 router.post("/sign-up", indexController.createUser);
@@ -21,5 +22,6 @@ router.post(
 );
 router.post("/upload", indexController.uploadFile);
 router.post("/new-folder", indexController.createFolder);
+router.post("/folders/update/:id", indexController.updateFolder);
 
 module.exports = router;

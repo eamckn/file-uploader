@@ -7,18 +7,18 @@
   </head>
   <body>
     <h1>Home</h1>
-    <p>Click <a href="/sign-up">here</a> to sign up.</p>
-    <p>Click <a href="/log-in">here</a> to log in.</p>
+    <p>Click <a href="/sign-up/">here</a> to sign up.</p>
+    <p>Click <a href="/log-in/">here</a> to log in.</p>
     <% if (locals.currentUser) { %>
     <p>Hello <%- locals.currentUser.email %></p>
-    <p>Click <a href="/log-out">here</a> to log out.</p>
+    <p>Click <a href="/log-out/">here</a> to log out.</p>
     <p>Upload a file below:</p>
     <form action="/upload" method="post" enctype="multipart/form-data">
       <input type="file" name="file" id="file" />
       <button type="submit">Upload</button>
     </form>
-    <p>Click <a href="/new-folder">here</a> to create a new folder.</p>
-    <p>Click <a href="/folders">here</a> to view all folders.</p>
+    <p>Click <a href="/new-folder/">here</a> to create a new folder.</p>
+    <p>Click <a href="/folders/">here</a> to view all folders.</p>
     <% } %>
   </body>
 </html>
