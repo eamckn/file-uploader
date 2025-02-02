@@ -14,9 +14,27 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
   password String
+  folders  Folder[]
+}
+
+model Folder {
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  files  File[]
+}
+
+model File {
+  id         Int    @id @default(autoincrement())
+  file       String @unique
+  size       String
+  uploadTime String
+  folder     Folder @relation(fields: [folderId], references: [id])
+  folderId   Int
 }
 
 model Session {
