@@ -10,6 +10,7 @@ router.get("/log-out", indexController.logOut);
 router.get("/new-folder", indexController.getNewFolder);
 router.get("/folders", indexController.getAllFolders);
 router.get("/folders/update/:id", indexController.getUpdateFolder);
+router.get("/folders/delete/:id", indexController.deleteFolder);
 
 // POST routes
 router.post("/sign-up", indexController.createUser);

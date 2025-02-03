@@ -54,6 +54,16 @@ module.exports.getAllFolders = async (req, res, next) => {
   res.render("folders", { folders });
 };
 
+module.exports.deleteFolder = async (req, res, next) => {
+  const { id } = req.params;
+  const folder = await prisma.folder.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+  res.redirect("/folders");
+};
+
 module.exports.logOut = (req, res, next) => {
   req.logout((err) => {
     if (err) {
