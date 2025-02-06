@@ -153,7 +153,18 @@ module.exports.uploadFile = [
         folderId: Number(id),
       },
     });
-    //console.log(req.file);
+    console.log(req.file);
     res.redirect("/");
   },
 ];
+
+module.exports.downloadFile = async (req, res, next) => {
+  const { id } = req.params;
+  const fileToDownload = await prisma.file.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  //console.log(fileToDownload);
+  res.download(`uploads/${fileToDownload.file}`);
+};

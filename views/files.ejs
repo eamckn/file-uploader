@@ -10,7 +10,10 @@
     <% locals.files.forEach((file) => { %>
     <p><%- file.file %></p>
     <p><%- file.size %> bytes</p>
-    <p>Uploaded at <%- file.file %></p>
+    <p>Uploaded at <%- file.uploadTime %></p>
+    <form action="./<%- file.id %>/download" method="post">
+      <button type="submit">Download file</button>
+    </form>
     <% }) %>
     <form action="" method="post" enctype="multipart/form-data">
       <input type="file" name="file" id="file" />
