@@ -71,7 +71,12 @@ module.exports.getFilesFromFolder = async (req, res, next) => {
 
 module.exports.deleteFolder = async (req, res, next) => {
   const { id } = req.params;
-  const folder = await prisma.folder.delete({
+  await prisma.file.deleteMany({
+    where: {
+      folderId: Number(id),
+    },
+  });
+  await prisma.folder.delete({
     where: {
       id: Number(id),
     },
