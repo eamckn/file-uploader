@@ -49,11 +49,11 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(req.session);
+//   console.log(req.user);
+//   next();
+// });
 
 app.use("/", router);
 

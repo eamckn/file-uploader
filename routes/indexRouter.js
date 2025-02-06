@@ -11,6 +11,7 @@ router.get("/new-folder", indexController.getNewFolder);
 router.get("/folders", indexController.getAllFolders);
 router.get("/folders/update/:id", indexController.getUpdateFolder);
 router.get("/folders/delete/:id", indexController.deleteFolder);
+router.get("/folders/:id/files", indexController.getFilesFromFolder);
 
 // POST routes
 router.post("/sign-up", indexController.createUser);
@@ -21,7 +22,7 @@ router.post(
     failureRedirect: "/log-in",
   })
 );
-router.post("/upload", indexController.uploadFile);
+router.post("/folders/:id/files", indexController.uploadFile);
 router.post("/new-folder", indexController.createFolder);
 router.post("/folders/update/:id", indexController.updateFolder);
 

@@ -54,6 +54,21 @@ module.exports.getAllFolders = async (req, res, next) => {
   res.render("folders", { folders });
 };
 
+module.exports.getFilesFromFolder = async (req, res, next) => {
+  const { id } = req.params;
+  const folder = await prisma.folder.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  const files = await prisma.file.findMany({
+    where: {
+      folderId: Number(id),
+    },
+  });
+  res.render("files", { files: files, folder: folder });
+};
+
 module.exports.deleteFolder = async (req, res, next) => {
   const { id } = req.params;
   const folder = await prisma.folder.delete({
@@ -114,8 +129,26 @@ module.exports.updateFolder = async (req, res, next) => {
 
 module.exports.uploadFile = [
   upload.single("file"),
+
+  //   async (req, res, next) => {
+  //     const { id } = req.params;
+  //     console.log(id);
+  //     console.log(req.file);
+  //     res.redirect("/");
+  //   },
   async (req, res, next) => {
-    console.log(req.file);
+    const uploadTime = new Date();
+    const { id } = req.params;
+    //console.log(uploadTime);
+    await prisma.file.create({
+      data: {
+        file: req.file.originalname,
+        size: req.file.size,
+        uploadTime: uploadTime,
+        folderId: Number(id),
+      },
+    });
+    //console.log(req.file);
     res.redirect("/");
   },
 ];

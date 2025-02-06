@@ -11,6 +11,7 @@
     <% locals.folders.forEach(folder => { %>
     <div>
       <p><%- folder.name %></p>
+      <a href="./<%- folder.id %>/files"><button>View contents</button></a>
       <a href="./update/<%- folder.id %>"><button>Update folder</button></a>
       <a href="./delete/<%- folder.id %>"><button>Delete folder</button></a>
     </div>
