@@ -1,7 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const multer = require("multer");
+const cloudinary = require("../config/cloudinary");
 
-// Prisma client instantialization
+// Prisma client initialization
 const prisma = new PrismaClient();
 
 // Multer storage config
@@ -134,17 +135,12 @@ module.exports.updateFolder = async (req, res, next) => {
 
 module.exports.uploadFile = [
   upload.single("file"),
-
-  //   async (req, res, next) => {
-  //     const { id } = req.params;
-  //     console.log(id);
-  //     console.log(req.file);
-  //     res.redirect("/");
-  //   },
   async (req, res, next) => {
     const uploadTime = new Date();
     const { id } = req.params;
-    //console.log(uploadTime);
+    console.log(
+      await cloudinary.uploader.upload(req.file.path, { resource_type: "auto" })
+    );
     await prisma.file.create({
       data: {
         file: req.file.originalname,
