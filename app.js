@@ -7,7 +7,8 @@ const passport = require("passport");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 require("./config/passport");
-const router = require("./routes/indexRouter");
+const indexRouter = require("./routes/indexRouter");
+const foldersRouter = require("./routes/foldersRouter");
 
 // App constants
 const PORT = process.env.PORT || 8080;
@@ -55,7 +56,8 @@ app.use((req, res, next) => {
 //   next();
 // });
 
-app.use("/", router);
+app.use("/", indexRouter);
+app.use("/folders", foldersRouter);
 
 // App server
 app.listen(PORT, () => {
