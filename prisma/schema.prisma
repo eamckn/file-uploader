@@ -29,12 +29,13 @@ model Folder {
 }
 
 model File {
-  id         Int      @id @default(autoincrement())
-  file       String   @unique
-  size       Int
-  uploadTime DateTime
-  folder     Folder   @relation(fields: [folderId], references: [id])
-  folderId   Int
+  id            Int      @id @default(autoincrement())
+  file          String   @unique
+  size          Int
+  uploadTime    DateTime
+  cloudinaryUrl String   @unique
+  folder        Folder   @relation(fields: [folderId], references: [id])
+  folderId      Int
 }
 
 model Session {

@@ -138,14 +138,17 @@ module.exports.uploadFile = [
   async (req, res, next) => {
     const uploadTime = new Date();
     const { id } = req.params;
-    console.log(
-      await cloudinary.uploader.upload(req.file.path, { resource_type: "auto" })
+    const { secure_url: cloudinaryUrl } = await cloudinary.uploader.upload(
+      req.file.path,
+      { resource_type: "auto" }
     );
+    //console.log(url);
     await prisma.file.create({
       data: {
         file: req.file.originalname,
         size: req.file.size,
-        uploadTime: uploadTime,
+        uploadTime,
+        cloudinaryUrl,
         folderId: Number(id),
       },
     });
