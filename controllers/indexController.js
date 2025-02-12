@@ -1,21 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
-const multer = require("multer");
 const cloudinary = require("../config/cloudinary");
+const upload = require("../config/multer");
 
 // Prisma client initialization
 const prisma = new PrismaClient();
-
-// Multer storage config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
 
 // GET middlewares
 module.exports.getHome = (req, res, next) => {
