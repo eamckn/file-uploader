@@ -1,15 +1,18 @@
 const router = require("express").Router();
-const indexController = require("../controllers/indexController");
+const foldersController = require("../controllers/foldersController");
+const filesController = require("../controllers/filesController");
 
 // GET routes
-router.get("/", indexController.getAllFolders);
-router.get("/update/:id", indexController.getUpdateFolder);
-router.get("/delete/:id", indexController.deleteFolder);
-router.get("/:id/files/", indexController.getFilesFromFolder);
+router.get("/", foldersController.getAllFolders);
+router.get("/new-folder", foldersController.getNewFolder);
+router.get("/update/:folderId", foldersController.getUpdateFolder);
+router.get("/delete/:folderId", foldersController.deleteFolder);
+router.get("/:folderId/files/", foldersController.getFilesFromFolder);
 
 // POST routes
-router.post("/:id/files", indexController.uploadFile);
-router.post("/:folderId/files/:id/download", indexController.downloadFile);
-router.post("/update/:id", indexController.updateFolder);
+router.post("/new-folder", foldersController.createFolder);
+router.post("/update/:folderId", foldersController.updateFolder);
+router.post("/:folderId/files", filesController.uploadFile);
+router.post("/:folderId/files/:fileId/download", filesController.downloadFile);
 
 module.exports = router;

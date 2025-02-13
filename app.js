@@ -56,8 +56,8 @@ app.use((req, res, next) => {
 //   next();
 // });
 
-app.use("/", indexRouter);
 app.use("/folders", foldersRouter);
+app.use("/", indexRouter);
 
 // App server
 app.listen(PORT, () => {

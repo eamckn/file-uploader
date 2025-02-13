@@ -1,16 +1,17 @@
 const router = require("express").Router();
 const passport = require("passport");
 const indexController = require("../controllers/indexController");
+const usersController = require("../controllers/usersController");
+const foldersController = require("../controllers/foldersController");
 
 // GET routes
 router.get("/", indexController.getHome);
 router.get("/sign-up", indexController.getSignUp);
 router.get("/log-in", indexController.getLogIn);
-router.get("/log-out", indexController.logOut);
-router.get("/new-folder", indexController.getNewFolder);
+router.get("/log-out", usersController.logOut);
 
 // POST routes
-router.post("/sign-up", indexController.createUser);
+router.post("/sign-up", usersController.createUser);
 router.post(
   "/log-in",
   passport.authenticate("local", {
@@ -18,6 +19,5 @@ router.post(
     failureRedirect: "/log-in",
   })
 );
-router.post("/new-folder", indexController.createFolder);
 
 module.exports = router;
