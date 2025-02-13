@@ -34,6 +34,7 @@ model File {
   size          Int
   uploadTime    DateTime
   cloudinaryUrl String   @unique
+  cloudinaryId  String   @unique
   folder        Folder   @relation(fields: [folderId], references: [id])
   folderId      Int
 }
