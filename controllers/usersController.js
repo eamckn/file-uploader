@@ -17,14 +17,16 @@ module.exports.logOut = (req, res, next) => {
 
 // POST middlewares
 module.exports.createUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
   bcrypt.hash(password, 10, async (err, hashedPassword) => {
     if (err) {
       return next(err);
     } else {
       await prisma.user.create({
         data: {
-          email: email,
+          firstName,
+          lastName,
+          email,
           password: hashedPassword,
         },
       });
