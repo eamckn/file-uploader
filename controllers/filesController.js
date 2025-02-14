@@ -1,6 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const cloudinary = require("../config/cloudinary");
 const upload = require("../config/multer");
+const axios = require("axios");
+const fs = require("fs");
 
 // Prisma client initialization
 const prisma = new PrismaClient();
@@ -26,18 +28,41 @@ module.exports.uploadFile = [
         folderId: Number(folderId),
       },
     });
-    console.log(req.file);
-    res.redirect("/");
+    //console.log(req.file);
+    fs.unlink(`./${req.file.path}`, (err) => {
+      if (err) throw err;
+      console.log(
+        "Uploaded file was successfully removed from local uploads folder."
+      );
+    });
+    res.redirect(".");
   },
 ];
 
 module.exports.downloadFile = async (req, res, next) => {
   const { fileId } = req.params;
-  const fileToDownload = await prisma.file.findUnique({
+  const file = await prisma.file.findUnique({
     where: {
       id: Number(fileId),
     },
   });
-  //console.log(fileToDownload);
-  res.download(`uploads/${fileToDownload.file}`);
+  // Get file data as readable stream
+  const response = await axios.get(file.cloudinaryUrl, {
+    responseType: "stream",
+  });
+
+  if (response.statusText !== "OK") {
+    throw new Error("Connection error");
+  }
+
+  // Set response headers to enable file download
+  res.setHeader("Content-Disposition", `attachment; filename="${file.file}"`);
+  res.setHeader(
+    "Content-Type",
+    response.headers["content-type"] || "application/octet-stream"
+  );
+
+  // Pipe the readable stream to the response
+  response.data.pipe(res);
+  res.end();
 };
