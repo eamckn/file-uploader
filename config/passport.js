@@ -21,7 +21,7 @@ const verifyCallback = async (username, password, done) => {
     if (!user) {
       return done(null, false);
     }
-    const match = password === user.password;
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return done(null, false);
     }
