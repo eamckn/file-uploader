@@ -1,18 +1,39 @@
 const router = require("express").Router();
 const foldersController = require("../controllers/foldersController");
 const filesController = require("../controllers/filesController");
+const { userAuthenticated } = require("../validation/userAuthenticated");
 
 // GET routes
-router.get("/", foldersController.getAllFolders);
-router.get("/new-folder", foldersController.getNewFolder);
-router.get("/update/:folderId", foldersController.getUpdateFolder);
-router.get("/delete/:folderId", foldersController.deleteFolder);
-router.get("/:folderId/files/", foldersController.getFilesFromFolder);
+router.get("/", userAuthenticated, foldersController.getAllFolders);
+router.get("/new-folder", userAuthenticated, foldersController.getNewFolder);
+router.get(
+  "/update/:folderId",
+  userAuthenticated,
+  foldersController.getUpdateFolder
+);
+router.get(
+  "/delete/:folderId",
+  userAuthenticated,
+  foldersController.deleteFolder
+);
+router.get(
+  "/:folderId/files/",
+  userAuthenticated,
+  foldersController.getFilesFromFolder
+);
 
 // POST routes
-router.post("/new-folder", foldersController.createFolder);
-router.post("/update/:folderId", foldersController.updateFolder);
-router.post("/:folderId/files", filesController.uploadFile);
-router.post("/:folderId/files/:fileId/download", filesController.downloadFile);
+router.post("/new-folder", userAuthenticated, foldersController.createFolder);
+router.post(
+  "/update/:folderId",
+  userAuthenticated,
+  foldersController.updateFolder
+);
+router.post("/:folderId/files", userAuthenticated, filesController.uploadFile);
+router.post(
+  "/:folderId/files/:fileId/download",
+  userAuthenticated,
+  filesController.downloadFile
+);
 
 module.exports = router;
