@@ -59,6 +59,16 @@ app.use((req, res, next) => {
 app.use("/folders", foldersRouter);
 app.use("/", indexRouter);
 
+// Error middleware
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.statusCode || 500).send(err.message);
+});
+
+app.use((req, res, next) => {
+  res.status(404).render("404");
+});
+
 // App server
 app.listen(PORT, () => {
   console.log(`Server is currently listening on port ${PORT}.`);
