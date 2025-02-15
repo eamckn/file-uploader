@@ -3,6 +3,8 @@ const cloudinary = require("../config/cloudinary");
 const upload = require("../config/multer");
 const axios = require("axios");
 const fs = require("fs");
+const { validateFile } = require("../validation/validateFile");
+const { validationResult } = require("express-validator");
 
 // Prisma client initialization
 const prisma = new PrismaClient();
@@ -10,32 +12,54 @@ const prisma = new PrismaClient();
 // POST middlewares
 module.exports.uploadFile = [
   upload.single("file"),
+  validateFile,
   async (req, res, next) => {
-    const uploadTime = new Date();
     const { folderId } = req.params;
-    const { secure_url: cloudinaryUrl, asset_id: cloudinaryId } =
-      await cloudinary.uploader.upload(req.file.path, {
-        resource_type: "auto",
-      });
-    //console.log(url);
-    await prisma.file.create({
-      data: {
-        file: req.file.originalname,
-        size: req.file.size,
-        uploadTime,
-        cloudinaryUrl,
-        cloudinaryId,
-        folderId: Number(folderId),
-      },
-    });
+    const errors = validationResult(req);
+    //console.log(errors);
     //console.log(req.file);
-    fs.unlink(`./${req.file.path}`, (err) => {
-      if (err) throw err;
-      console.log(
-        "Uploaded file was successfully removed from local uploads folder."
-      );
-    });
-    res.redirect(".");
+    if (errors.isEmpty()) {
+      const uploadTime = new Date();
+      const { secure_url: cloudinaryUrl, asset_id: cloudinaryId } =
+        await cloudinary.uploader.upload(req.file.path, {
+          resource_type: "auto",
+        });
+      //console.log(url);
+      await prisma.file.create({
+        data: {
+          file: req.file.originalname,
+          size: req.file.size,
+          uploadTime,
+          cloudinaryUrl,
+          cloudinaryId,
+          folderId: Number(folderId),
+        },
+      });
+      //console.log(req.file);
+      fs.unlink(`./${req.file.path}`, (err) => {
+        if (err) throw err;
+        console.log(
+          "Uploaded file was successfully removed from local uploads folder."
+        );
+      });
+      res.redirect(".");
+    } else {
+      const folder = await prisma.folder.findUnique({
+        where: {
+          id: Number(folderId),
+        },
+      });
+      const files = await prisma.file.findMany({
+        where: {
+          folderId: Number(folderId),
+        },
+      });
+      return res.status(400).render("files", {
+        files: files,
+        folder: folder,
+        errors: errors.array(),
+      });
+    }
   },
 ];
 
