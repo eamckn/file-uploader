@@ -1,12 +1,14 @@
+const asyncHandler = require("express-async-handler");
+
 // GET middlewares
-module.exports.getHome = (req, res, next) => {
+module.exports.getHome = asyncHandler((req, res, next) => {
   res.render("index");
-};
+});
 
-module.exports.getSignUp = (req, res, next) => {
+module.exports.getSignUp = asyncHandler((req, res, next) => {
   res.render("sign-up");
-};
+});
 
-module.exports.getLogIn = (req, res, next) => {
+module.exports.getLogIn = asyncHandler((req, res, next) => {
   res.render("log-in");
-};
+});

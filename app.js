@@ -18,6 +18,7 @@ const sessionStore = new PrismaSessionStore(new PrismaClient(), {
   dbRecordIdIsSessionId: true,
   dbRecordIdFunction: undefined,
 });
+const errorLink = "";
 
 // App initializations
 const app = express();
@@ -62,7 +63,7 @@ app.use("/", indexRouter);
 // Error middleware
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(err.statusCode || 500).send(err.message);
+  res.status(err.statusCode || 500).render("errorRedirect", { err: err });
 });
 
 app.use((req, res, next) => {

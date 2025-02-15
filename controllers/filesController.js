@@ -5,12 +5,13 @@ const fs = require("fs");
 const { validateFile } = require("../validation/validateFile");
 const { validationResult } = require("express-validator");
 const db = require("../db/queries");
+const asyncHandler = require("express-async-handler");
 
 // POST middlewares
 module.exports.uploadFile = [
   upload.single("file"),
   validateFile,
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     const { folderId } = req.params;
     const errors = validationResult(req);
     //console.log(errors);
@@ -47,10 +48,10 @@ module.exports.uploadFile = [
         errors: errors.array(),
       });
     }
-  },
+  }),
 ];
 
-module.exports.downloadFile = async (req, res, next) => {
+module.exports.downloadFile = asyncHandler(async (req, res, next) => {
   const { fileId } = req.params;
   const file = await db.getFileByFileId(fileId);
   // Get file data as readable stream
@@ -59,7 +60,9 @@ module.exports.downloadFile = async (req, res, next) => {
   });
 
   if (response.statusText !== "OK") {
-    throw new Error("Connection error");
+    throw new Error(
+      "Connection error. Please check your internet connection and try again."
+    );
   }
 
   // Set response headers to enable file download
@@ -72,4 +75,4 @@ module.exports.downloadFile = async (req, res, next) => {
   // Pipe the readable stream to the response
   response.data.pipe(res);
   res.end();
-};
+});

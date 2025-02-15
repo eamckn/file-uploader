@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const { validateUser } = require("../validation/validateUser");
 const { validationResult } = require("express-validator");
 const db = require("../db/queries");
+const asyncHandler = require("express-async-handler");
 
 // GET middlewares
 module.exports.logOut = (req, res, next) => {
@@ -17,7 +18,7 @@ module.exports.logOut = (req, res, next) => {
 // POST middlewares
 module.exports.createUser = [
   validateUser,
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     //console.log(errors.array());
     //console.log(typeof errors.array());
@@ -34,5 +35,5 @@ module.exports.createUser = [
     } else {
       return res.status(400).render("sign-up", { errors: errors.array() });
     }
-  },
+  }),
 ];
