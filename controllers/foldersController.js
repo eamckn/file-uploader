@@ -1,4 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
+const { validateFolder } = require("../validation/validateFolder");
+const { validationResult } = require("express-validator");
 
 // Prisma client initialization
 const prisma = new PrismaClient();
@@ -45,17 +47,25 @@ module.exports.getFilesFromFolder = async (req, res, next) => {
 };
 
 // POST middlewares
-module.exports.createFolder = async (req, res, next) => {
-  const { id } = req.user;
-  const { folderName } = req.body;
-  await prisma.folder.create({
-    data: {
-      name: folderName,
-      userId: id,
-    },
-  });
-  res.redirect("/");
-};
+module.exports.createFolder = [
+  validateFolder,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      const { id } = req.user;
+      const { folderName } = req.body;
+      await prisma.folder.create({
+        data: {
+          name: folderName,
+          userId: id,
+        },
+      });
+      res.redirect("/");
+    } else {
+      return res.status(400).render("newFolder", { errors: errors.array() });
+    }
+  },
+];
 
 module.exports.deleteFolder = async (req, res, next) => {
   const { folderId } = req.params;
@@ -72,16 +82,32 @@ module.exports.deleteFolder = async (req, res, next) => {
   res.redirect("/folders/");
 };
 
-module.exports.updateFolder = async (req, res, next) => {
-  const { folderId } = req.params;
-  const { folderName } = req.body;
-  await prisma.folder.update({
-    where: {
-      id: Number(folderId),
-    },
-    data: {
-      name: folderName,
-    },
-  });
-  res.redirect("/");
-};
+module.exports.updateFolder = [
+  validateFolder,
+  async (req, res, next) => {
+    const { folderId } = req.params;
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      const { folderName } = req.body;
+      await prisma.folder.update({
+        where: {
+          id: Number(folderId),
+        },
+        data: {
+          name: folderName,
+        },
+      });
+      //console.log(folder);
+      res.redirect("back");
+    } else {
+      const folder = await prisma.folder.findUnique({
+        where: {
+          id: Number(folderId),
+        },
+      });
+      return res
+        .status(400)
+        .render("updateFolder", { folder: folder, errors: errors.array() });
+    }
+  },
+];
