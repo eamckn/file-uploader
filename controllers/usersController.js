@@ -1,10 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const { validateUser } = require("../validation/validateUser");
 const { validationResult } = require("express-validator");
-
-// Prisma client initialization
-const prisma = new PrismaClient();
+const db = require("../db/queries");
 
 // GET middlewares
 module.exports.logOut = (req, res, next) => {
@@ -30,14 +27,7 @@ module.exports.createUser = [
         if (err) {
           return next(err);
         } else {
-          await prisma.user.create({
-            data: {
-              firstName,
-              lastName,
-              email,
-              password: hashedPassword,
-            },
-          });
+          await db.createUser(firstName, lastName, email, hashedPassword);
           res.redirect("/log-in");
         }
       });

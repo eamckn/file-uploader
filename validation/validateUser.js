@@ -1,13 +1,10 @@
 const { body } = require("express-validator");
-const { PrismaClient } = require("@prisma/client");
+const db = require("../db/queries");
 
 // Constants
 const blankMsg = "cannot be left blank.";
 const passwordMsg = "Password must contain at least ";
 const DIGITS = "1234567890";
-
-// Prisma client initialization
-const prisma = new PrismaClient();
 
 // Validation chain for user sign-up
 module.exports.validateUser = [
@@ -31,11 +28,7 @@ module.exports.validateUser = [
     .bail()
     // Check if email is already in user database
     .custom(async (value) => {
-      const emailInUse = await prisma.user.findUnique({
-        where: {
-          email: value,
-        },
-      });
+      const emailInUse = await db.getUserByEmail(value);
       if (emailInUse) {
         throw new Error(
           "This email is already in use. Please sign up using a different email address."

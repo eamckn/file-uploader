@@ -1,9 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
-
-const prisma = new PrismaClient();
+const db = require("../db/queries");
 
 const customFields = {
   usernameField: "email",
@@ -12,11 +10,7 @@ const customFields = {
 
 const verifyCallback = async (username, password, done) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: username,
-      },
-    });
+    const user = await db.getUserByEmail(username);
     console.log(user);
     if (!user) {
       return done(null, false);
@@ -39,11 +33,7 @@ passport.serializeUser((user, done) => {
 });
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
+    const user = await db.getUserById(id);
 
     done(null, user);
   } catch (err) {

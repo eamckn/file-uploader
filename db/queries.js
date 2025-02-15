@@ -37,7 +37,7 @@ module.exports.createFile = async (
       uploadTime,
       cloudinaryUrl,
       cloudinaryId,
-      folderId: Number(folderId),
+      folderId,
     },
   });
 };
@@ -97,10 +97,10 @@ module.exports.getFileByFileId = async (fileId) => {
   return file;
 };
 // UPDATE queries
-module.exports.updateFolder = async (folderId, name) => {
+module.exports.updateFolder = async (id, name) => {
   await prisma.folder.update({
     where: {
-      id: Number(folderId),
+      id,
     },
     data: {
       name: name,
