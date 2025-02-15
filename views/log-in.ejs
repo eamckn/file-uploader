@@ -6,6 +6,11 @@
     <title>Log-in</title>
   </head>
   <body>
+    <% if (locals.currentUser) { %>
+    <h1>Hmm... looks like you're already signed in!</h1>
+    <p>Click <a href="/">here</a> to return to the home page.</p>
+    <p>Or click <a href="/log-out">here</a> to log out.</p>
+    <% } else { %>
     <h1>Log-in</h1>
     <form action="" method="post">
       <label for="email">Email: </label>
@@ -14,5 +19,6 @@
       <input type="password" name="password" id="password" />
       <button type="submit">Log in</button>
     </form>
+    <% } %>
   </body>
 </html>
