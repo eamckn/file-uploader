@@ -18,7 +18,6 @@ const sessionStore = new PrismaSessionStore(new PrismaClient(), {
   dbRecordIdIsSessionId: true,
   dbRecordIdFunction: undefined,
 });
-const errorLink = "";
 
 // App initializations
 const app = express();
@@ -30,6 +29,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(assetsPath));
 
+// Express-session and passport
 app.use(
   session({
     cookie: {
@@ -43,12 +43,9 @@ app.use(
 );
 app.use(passport.session());
 
-// Debugging middlewares
+// Set res.locals for template renders
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
-  // if (res.locals.currentUser) {
-  //   console.log(res.locals.currentUser);
-  // }
   next();
 });
 app.use((req, res, next) => {
@@ -58,6 +55,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Authentication debugging middlewares
 // app.use((req, res, next) => {
 //   console.log(req.session);
 //   console.log(req.user);
@@ -67,12 +65,13 @@ app.use((req, res, next) => {
 app.use("/folders", foldersRouter);
 app.use("/", indexRouter);
 
-// Error middleware
+// Error handler middleware
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.statusCode || 500).render("errorRedirect", { err: err });
 });
 
+// Invalid route request handler middleware
 app.use((req, res, next) => {
   res.status(404).render("404");
 });
