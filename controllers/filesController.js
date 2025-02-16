@@ -14,15 +14,12 @@ module.exports.uploadFile = [
   asyncHandler(async (req, res, next) => {
     const { folderId } = req.params;
     const errors = validationResult(req);
-    //console.log(errors);
-    //console.log(req.file);
     if (errors.isEmpty()) {
       const uploadTime = new Date();
       const { secure_url: cloudinaryUrl, asset_id: cloudinaryId } =
         await cloudinary.uploader.upload(req.file.path, {
           resource_type: "auto",
         });
-      //console.log(url);
       await db.createFile(
         req.file.originalname,
         req.file.size,
@@ -31,7 +28,6 @@ module.exports.uploadFile = [
         cloudinaryId,
         Number(folderId)
       );
-      //console.log(req.file);
       fs.unlink(`./${req.file.path}`, (err) => {
         if (err) throw err;
         console.log(

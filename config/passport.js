@@ -11,7 +11,6 @@ const customFields = {
 const verifyCallback = async (username, password, done) => {
   try {
     const user = await db.getUserByEmail(username);
-    //console.log(user);
     if (!user) {
       return done(null, false);
     }

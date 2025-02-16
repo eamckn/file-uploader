@@ -11,7 +11,6 @@ module.exports.getNewFolder = asyncHandler((req, res, next) => {
 module.exports.getAllFolders = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const folders = await db.getFoldersByUserId(id);
-  //console.log(folders);
   res.render("folders", { folders });
 });
 
@@ -58,7 +57,6 @@ module.exports.updateFolder = [
     if (errors.isEmpty()) {
       const { folderName } = req.body;
       await db.updateFolder(Number(folderId), folderName);
-      //console.log(folder);
       res.redirect("back");
     } else {
       const folder = await db.getFolderByFolderId(folderId);

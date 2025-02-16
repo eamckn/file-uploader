@@ -64,7 +64,6 @@ module.exports.validateUser = [
     .custom(async (value) => {
       let numCount = 0;
       const chars = value.split("");
-      //console.log(chars);
       chars.forEach((char) => {
         if (DIGITS.includes(char)) {
           numCount++;

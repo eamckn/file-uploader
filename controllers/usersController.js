@@ -20,8 +20,6 @@ module.exports.createUser = [
   validateUser,
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    //console.log(errors.array());
-    //console.log(typeof errors.array());
     if (errors.isEmpty()) {
       const { firstName, lastName, email, password } = req.body;
       bcrypt.hash(password, 10, async (err, hashedPassword) => {
