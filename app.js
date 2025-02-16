@@ -46,11 +46,18 @@ app.use(passport.session());
 // Debugging middlewares
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
-  if (res.locals.currentUser) {
-    console.log(res.locals.currentUser);
+  // if (res.locals.currentUser) {
+  //   console.log(res.locals.currentUser);
+  // }
+  next();
+});
+app.use((req, res, next) => {
+  if (req.session.messages) {
+    res.locals.failureMessage = req.session.messages[0];
   }
   next();
 });
+
 // app.use((req, res, next) => {
 //   console.log(req.session);
 //   console.log(req.user);

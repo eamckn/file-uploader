@@ -17,6 +17,7 @@ router.post(
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/log-in",
+    failureMessage: "Your log in attempt was not successful. Please try again.",
   })
 );
 
