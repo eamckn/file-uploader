@@ -1,11 +1,11 @@
-const cloudinary = require("../config/cloudinary");
-const upload = require("../config/multer");
 const axios = require("axios");
 const fs = require("fs");
-const { validateFile } = require("../validation/validateFile");
-const { validationResult } = require("express-validator");
-const db = require("../db/queries");
 const asyncHandler = require("express-async-handler");
+const { validationResult } = require("express-validator");
+const { validateFile } = require("../validation/validateFile");
+const cloudinary = require("../config/cloudinary");
+const upload = require("../config/multer");
+const db = require("../db/queries");
 
 // POST middlewares
 module.exports.uploadFile = [

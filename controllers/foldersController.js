@@ -1,7 +1,7 @@
-const { validateFolder } = require("../validation/validateFolder");
-const { validationResult } = require("express-validator");
-const db = require("../db/queries");
 const asyncHandler = require("express-async-handler");
+const { validationResult } = require("express-validator");
+const { validateFolder } = require("../validation/validateFolder");
+const db = require("../db/queries");
 
 // GET middlewares
 module.exports.getNewFolder = asyncHandler((req, res, next) => {

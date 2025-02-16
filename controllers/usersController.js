@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
-const { validateUser } = require("../validation/validateUser");
 const { validationResult } = require("express-validator");
-const db = require("../db/queries");
 const asyncHandler = require("express-async-handler");
+const { validateUser } = require("../validation/validateUser");
+const db = require("../db/queries");
 
 // GET middlewares
 module.exports.logOut = (req, res, next) => {
